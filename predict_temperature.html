@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Temperature Prediction</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+  <h1>Temperature Prediction</h1>
+  <label for="numDays">Enter Number of Days:</label>
+  <input type="number" id="numDays" name="numDays" min="1" required>
+  <button onclick="getMaxTemperatures()">Get Max Temperatures</button>
+  <button onclick="getMinTemperatures()">Get Min Temperatures</button>
+  <div id="result"></div>
+
+  <script>
+    function displayResults(predictions) {
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = '';
+      predictions.forEach(prediction => {
+        const p = document.createElement('p');
+        p.textContent = JSON.stringify(prediction);
+        resultDiv.appendChild(p);
+      });
+    }
+
+    function getMaxTemperatures() {
+      const numDays = document.getElementById('numDays').value;
+      axios.post('http://localhost:5000/predict/temperatures/max_t', { num_days: numDays })
+        .then(response => {
+          displayResults(response.data.predictions);
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+        });
+    }
+
+    function getMinTemperatures() {
+      const numDays = document.getElementById('numDays').value;
+      axios.post('http://localhost:5000/predict/temperatures/min_t', { num_days: numDays })
+        .then(response => {
+          displayResults(response.data.predictions);
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+        });
+    }
+  </script>
+</body>
+</html>
